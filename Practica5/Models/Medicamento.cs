@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Practica5.Models
@@ -11,9 +12,6 @@ namespace Practica5.Models
         [Required(ErrorMessage = "El nombre es obligatorio")]
         [StringLength(100)]
         public string Nombre { get; set; } = string.Empty;
-
-        [Required(ErrorMessage = "La descripción es obligatoria")]
-        public string Descripcion { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "El precio es obligatorio")]
         [Range(0.01, double.MaxValue, ErrorMessage = "El precio debe ser mayor a 0")]
@@ -29,14 +27,25 @@ namespace Practica5.Models
         [Display(Name = "Fecha de Vencimiento")]
         public DateTime FechaVencimiento { get; set; }
 
+        public string? Descripcion { get; set; }
+
+        [Display(Name = "Estado (Activo/Inactivo)")]
+        public bool Estado { get; set; } = true;
+
         // --- RELACIONES ---
 
+        [Required(ErrorMessage = "Seleccione una categoría")]
         [Display(Name = "Categoría")]
         public int CategoriaId { get; set; }
-        // public virtual Categoria? Categoria { get; set; } // Descomentar cuando crees la clase Categoria
 
+        [ForeignKey("CategoriaId")]
+        public virtual Categoria? Categoria { get; set; }
+
+        [Required(ErrorMessage = "Seleccione un estante")]
         [Display(Name = "Estante")]
         public int EstanteId { get; set; }
-        // public virtual Estante? Estante { get; set; } // Descomentar cuando crees la clase Estante
+
+        [ForeignKey("EstanteId")]
+        public virtual Estante? Estante { get; set; }
     }
 }
