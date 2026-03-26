@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Practica5.Controllers
 {
-    [Authorize] // Bloquea el acceso a usuarios no logueados
+    [Authorize]
     public class MedicamentosController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -21,30 +21,48 @@ namespace Practica5.Controllers
             _context = context;
         }
 
-        // GET: Medicamentos con Filtros
+        // GET: Medicamentos con Filtros y Buscador
         public async Task<IActionResult> Index(string buscarNombre, int? filtrarCategoria)
         {
-            // Cargamos los medicamentos incluyendo sus relaciones
             IQueryable<Medicamento> consulta = _context.Medicamentos
                 .Include(m => m.Categoria)
                 .Include(m => m.Estante);
 
-            // Filtro por Nombre
+            // 1. Filtro por Nombre
             if (!string.IsNullOrEmpty(buscarNombre))
             {
                 consulta = consulta.Where(m => m.Nombre.Contains(buscarNombre));
             }
 
-            // Filtro por Categoría
+            // 2. Filtro por Categoría
             if (filtrarCategoria.HasValue)
             {
                 consulta = consulta.Where(m => m.CategoriaId == filtrarCategoria);
             }
 
-            // Datos para los Dropdowns del filtro en la vista
             ViewBag.Categorias = new SelectList(_context.Categorias, "Id", "Nombre");
 
-            return View(await consulta.ToListAsync());
+            // Enviamos los valores actuales para que no se borren del buscador al cargar la página
+            ViewData["FiltroNombre"] = buscarNombre;
+            ViewData["FiltroCat"] = filtrarCategoria;
+
+            return View(await consulta.OrderBy(m => m.Nombre).ToListAsync());
+        }
+
+        // NUEVO: Reporte de Medicamentos Vencidos o por Vencer (Próximos 30 días)
+        // Solo accesible para personal de la farmacia
+        [Authorize(Roles = "Administrador,Farmacéutico")]
+        public async Task<IActionResult> ReporteVencimientos()
+        {
+            DateTime fechaLimite = DateTime.Now.AddDays(30);
+
+            var vencidos = await _context.Medicamentos
+                .Include(m => m.Categoria)
+                .Where(m => m.FechaVencimiento <= fechaLimite)
+                .OrderBy(m => m.FechaVencimiento)
+                .ToListAsync();
+
+            return View(vencidos);
         }
 
         // GET: Medicamentos/Details/5
@@ -62,7 +80,7 @@ namespace Practica5.Controllers
             return View(medicamento);
         }
 
-        // Solo Administrador y Farmacéutico pueden CREAR
+        // CREATE: Solo Admin y Farmacéutico
         [Authorize(Roles = "Administrador,Farmacéutico")]
         public IActionResult Create()
         {
@@ -87,7 +105,7 @@ namespace Practica5.Controllers
             return View(medicamento);
         }
 
-        // Solo Administrador y Farmacéutico pueden EDITAR
+        // EDIT: Solo Admin y Farmacéutico
         [Authorize(Roles = "Administrador,Farmacéutico")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -127,7 +145,7 @@ namespace Practica5.Controllers
             return View(medicamento);
         }
 
-        // Solo ADMINISTRADOR puede ELIMINAR
+        // DELETE: EXCLUSIVO para Administrador
         [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -149,9 +167,11 @@ namespace Practica5.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var medicamento = await _context.Medicamentos.FindAsync(id);
-            if (medicamento != null) _context.Medicamentos.Remove(medicamento);
-
-            await _context.SaveChangesAsync();
+            if (medicamento != null)
+            {
+                _context.Medicamentos.Remove(medicamento);
+                await _context.SaveChangesAsync();
+            }
             return RedirectToAction(nameof(Index));
         }
 
