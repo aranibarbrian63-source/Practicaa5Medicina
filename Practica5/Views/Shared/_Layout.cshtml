@@ -5,14 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Farmacia Practica 5</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    @* Agregamos Bootstrap Icons para los iconos de alerta y botones *@
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Practica5.styles.css" asp-append-version="true" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">💊 Farmacia Sist.</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-capsule text-success"></i> Farmacia Sist.
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -20,24 +24,30 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Inicio</a>
+                            <a class="nav-link text-light" asp-controller="Home" asp-action="Index">Inicio</a>
                         </li>
 
-                        @* Solo usuarios logueados ven Medicamentos *@
+                        @* Solo usuarios logueados ven Inventario *@
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Medicamentos" asp-action="Index">Inventario</a>
+                                <a class="nav-link text-light" asp-controller="Medicamentos" asp-action="Index">Inventario</a>
                             </li>
 
-                            @* Menú avanzado solo para Administrador y Farmacéutico *@
+                            @* Menú avanzado para Administrador y Farmacéutico *@
                             @if (User.IsInRole("Administrador") || User.IsInRole("Farmacéutico"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Categorias" asp-action="Index">Categorías</a>
+                                    <a class="nav-link text-light" asp-controller="Categorias" asp-action="Index">Categorías</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Estantes" asp-action="Index">Estantes</a>
+                                    <a class="nav-link text-light" asp-controller="Estantes" asp-action="Index">Estantes</a>
+                                </li>
+                                @* NUEVO: Botón de Alertas de Vencimiento *@
+                                <li class="nav-item">
+                                    <a class="nav-link text-warning fw-bold" asp-controller="Medicamentos" asp-action="ReporteVencimientos">
+                                        <i class="bi bi-exclamation-triangle-fill"></i> Alertas
+                                    </a>
                                 </li>
                             }
                         }
@@ -48,21 +58,23 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-primary">Hola, @User.Identity.Name</a>
+                                <span class="nav-link text-info">
+                                    <i class="bi bi-person-circle"></i> @User.Identity.Name
+                                </span>
                             </li>
                             <li class="nav-item">
                                 <form asp-controller="Account" asp-action="Logout" method="post" class="form-inline">
-                                    <button type="submit" class="btn btn-link nav-link text-danger border-0">Cerrar Sesión</button>
+                                    <button type="submit" class="btn btn-outline-danger btn-sm mt-1 ms-2">Cerrar Sesión</button>
                                 </form>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Iniciar Sesión</a>
+                                <a class="nav-link text-light" asp-controller="Account" asp-action="Login">Iniciar Sesión</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Registrarse</a>
+                                <a class="nav-link text-light" asp-controller="Account" asp-action="Register">Registrarse</a>
                             </li>
                         }
                     </ul>
@@ -76,11 +88,12 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
+    <footer class="border-top footer text-muted bg-light">
+        <div class="container text-center">
             &copy; 2026 - Farmacia Practica 5 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacidad</a>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
