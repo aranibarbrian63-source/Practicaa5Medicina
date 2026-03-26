@@ -16,10 +16,40 @@ namespace Practica5.Controllers
             _signInManager = signInManager;
         }
 
+        // --- MÉTODOS DE LOGIN (LO QUE TE FALTABA) ---
+
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                // El tercer parámetro 'false' es para que no bloquee la cuenta tras fallos
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+
+                ModelState.AddModelError(string.Empty, "Correo o contraseña incorrectos.");
+            }
+            return View(model);
+        }
+
+        // --- MÉTODOS DE REGISTRO ---
+
         [HttpGet]
         public IActionResult Register() => View();
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterVM model)
         {
             if (ModelState.IsValid)
@@ -50,7 +80,10 @@ namespace Practica5.Controllers
             return View(model);
         }
 
+        // --- MÉTODO DE CERRAR SESIÓN ---
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
