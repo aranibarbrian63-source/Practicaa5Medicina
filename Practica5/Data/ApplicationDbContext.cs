@@ -13,5 +13,8 @@ namespace Practica5.Data
         }
 
         public DbSet<Medicamento> Medicamentos { get; set; }
+        // Agrega estas líneas dentro de tu ApplicationDbContext
+        public DbSet<Categoria> Categorias { get; set; }
+        public DbSet<Estante> Estantes { get; set; }
     }
 }
