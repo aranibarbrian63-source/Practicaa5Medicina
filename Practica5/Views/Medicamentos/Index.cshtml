@@ -1,77 +1,71 @@
 ﻿@model IEnumerable<Practica5.Models.Medicamento>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Inventario de Medicamentos";
 }
 
-<h1>Index</h1>
+<h1>Inventario de Farmacia</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-success">Nuevo Medicamento</a>
 </p>
-<table class="table">
+
+<form asp-action="Index" method="get" class="mb-4 p-3 border rounded bg-light">
+    <div class="row">
+        <div class="col-md-4">
+            <label class="form-label">Buscar por nombre:</label>
+            <input type="text" name="buscarNombre" value="@Context.Request.Query["buscarNombre"]" class="form-control" placeholder="Ej: Paracetamol..." />
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Filtrar por Categoría:</label>
+            <select name="filtrarCategoria" class="form-select" asp-items="ViewBag.Categorias">
+                <option value="">-- Todas las categorías --</option>
+            </select>
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">Aplicar Filtros</button>
+        </div>
+    </div>
+</form>
+
+<table class="table table-striped">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Precio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Stock)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaVencimiento)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descripcion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Estado)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Categoria)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Estante)
-            </th>
-            <th></th>
+            <th>@Html.DisplayNameFor(model => model.Nombre)</th>
+            <th>@Html.DisplayNameFor(model => model.Precio)</th>
+            <th>@Html.DisplayNameFor(model => model.Stock)</th>
+            <th>Categoría</th>
+            <th>Estante</th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Precio)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Stock)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaVencimiento)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descripcion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Estado)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Categoria.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Estante.Nombre)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
+                <td>@item.Precio.ToString("C")</td>
+                <td>
+                    @if (item.Stock <= 5)
+                    {
+                        <span class="badge bg-danger">@item.Stock (Bajo Stock)</span>
+                    }
+                    else
+                    {
+                        @item.Stock
+                    }
+                </td>
+                <td>@Html.DisplayFor(modelItem => item.Categoria.Nombre)</td>
+                <td>@Html.DisplayFor(modelItem => item.Estante.Nombre)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Editar</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Detalles</a>
+                    @if (User.IsInRole("Administrador"))
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Borrar</a>
+                    }
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
