@@ -28,29 +28,24 @@ namespace Practica5.Controllers
                 .Include(m => m.Categoria)
                 .Include(m => m.Estante);
 
-            // 1. Filtro por Nombre
             if (!string.IsNullOrEmpty(buscarNombre))
             {
                 consulta = consulta.Where(m => m.Nombre.Contains(buscarNombre));
             }
 
-            // 2. Filtro por Categoría
             if (filtrarCategoria.HasValue)
             {
                 consulta = consulta.Where(m => m.CategoriaId == filtrarCategoria);
             }
 
-            ViewBag.Categorias = new SelectList(_context.Categorias, "Id", "Nombre");
+            ViewBag.Categorias = new SelectList(_context.Categorias, "Id", "Nombre", filtrarCategoria);
 
-            // Enviamos los valores actuales para que no se borren del buscador al cargar la página
             ViewData["FiltroNombre"] = buscarNombre;
             ViewData["FiltroCat"] = filtrarCategoria;
 
             return View(await consulta.OrderBy(m => m.Nombre).ToListAsync());
         }
 
-        // NUEVO: Reporte de Medicamentos Vencidos o por Vencer (Próximos 30 días)
-        // Solo accesible para personal de la farmacia
         [Authorize(Roles = "Administrador,Farmacéutico")]
         public async Task<IActionResult> ReporteVencimientos()
         {
@@ -65,7 +60,6 @@ namespace Practica5.Controllers
             return View(vencidos);
         }
 
-        // GET: Medicamentos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
@@ -80,7 +74,6 @@ namespace Practica5.Controllers
             return View(medicamento);
         }
 
-        // CREATE: Solo Admin y Farmacéutico
         [Authorize(Roles = "Administrador,Farmacéutico")]
         public IActionResult Create()
         {
@@ -105,7 +98,6 @@ namespace Practica5.Controllers
             return View(medicamento);
         }
 
-        // EDIT: Solo Admin y Farmacéutico
         [Authorize(Roles = "Administrador,Farmacéutico")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -145,7 +137,6 @@ namespace Practica5.Controllers
             return View(medicamento);
         }
 
-        // DELETE: EXCLUSIVO para Administrador
         [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Delete(int? id)
         {

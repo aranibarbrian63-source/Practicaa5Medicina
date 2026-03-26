@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Farmacia Practica 5</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    @* Agregamos Bootstrap Icons para los iconos de alerta y botones *@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Practica5.styles.css" asp-append-version="true" />
@@ -27,14 +26,12 @@
                             <a class="nav-link text-light" asp-controller="Home" asp-action="Index">Inicio</a>
                         </li>
 
-                        @* Solo usuarios logueados ven Inventario *@
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-light" asp-controller="Medicamentos" asp-action="Index">Inventario</a>
                             </li>
 
-                            @* Menú avanzado para Administrador y Farmacéutico *@
                             @if (User.IsInRole("Administrador") || User.IsInRole("Farmacéutico"))
                             {
                                 <li class="nav-item">
@@ -43,7 +40,6 @@
                                 <li class="nav-item">
                                     <a class="nav-link text-light" asp-controller="Estantes" asp-action="Index">Estantes</a>
                                 </li>
-                                @* NUEVO: Botón de Alertas de Vencimiento *@
                                 <li class="nav-item">
                                     <a class="nav-link text-warning fw-bold" asp-controller="Medicamentos" asp-action="ReporteVencimientos">
                                         <i class="bi bi-exclamation-triangle-fill"></i> Alertas
@@ -53,7 +49,6 @@
                         }
                     </ul>
 
-                    @* SECCIÓN DE USUARIO (LOGIN / LOGOUT) *@
                     <ul class="navbar-nav">
                         @if (User.Identity.IsAuthenticated)
                         {
@@ -89,7 +84,7 @@
     </div>
 
     <footer class="border-top footer text-muted bg-light">
-        <div class="container text-center">
+        <div class="container text-center py-3">
             &copy; 2026 - Farmacia Practica 5 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacidad</a>
         </div>
     </footer>
