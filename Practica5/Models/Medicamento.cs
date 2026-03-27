@@ -13,6 +13,18 @@ namespace Practica5.Models
         [StringLength(100)]
         public string Nombre { get; set; } = string.Empty;
 
+        // --- NUEVOS CAMPOS ---
+
+        [Required(ErrorMessage = "La presentación es obligatoria (Cápsula, Líquido, etc.)")]
+        [Display(Name = "Presentación")]
+        public string Presentacion { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "La concentración es obligatoria (500mg, 10ml, etc.)")]
+        [Display(Name = "Concentración")]
+        public string Concentracion { get; set; } = string.Empty;
+
+        // ----------------------
+
         [Required(ErrorMessage = "El precio es obligatorio")]
         [Range(0.01, double.MaxValue, ErrorMessage = "El precio debe ser mayor a 0")]
         [Column(TypeName = "decimal(18,2)")]

@@ -1,66 +1,186 @@
 ﻿@model Practica5.Models.Medicamento
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Nuevo Medicamento";
 }
 
-<h1>Create</h1>
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-header bg-success text-white py-3">
+                    <h4 class="mb-0 fw-bold"><i class="bi bi-capsule me-2"></i> Registro de Medicamento</h4>
+                    <p class="small mb-0 opacity-75">Complete todos los campos para añadir el producto al inventario</p>
+                </div>
 
-<h4>Medicamento</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
+                <div class="card-body p-4 bg-light">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger shadow-sm py-2" role="alert"></div>
+
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label asp-for="Nombre" class="form-label fw-bold text-secondary"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white"><i class="bi bi-tag-fill text-muted"></i></span>
+                                    <input asp-for="Nombre" class="form-control" placeholder="Ej: Paracetamol" />
+                                </div>
+                                <span asp-validation-for="Nombre" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold text-secondary">Presentación</label>
+                                <select id="selPresentacion" asp-for="Presentacion" class="form-select border-success">
+                                    <option value="">-- Seleccione --</option>
+                                    <option value="Capsula">Cápsula / Tableta</option>
+                                    <option value="Liquido">Jarabe / Líquido</option>
+                                    <option value="Inyectable">Ampolla / Inyectable</option>
+                                </select>
+                                <span asp-validation-for="Presentacion" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold text-secondary">Cantidad (Valor)</label>
+                                <input type="number" id="numConcentracion" class="form-control" placeholder="0" />
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold text-secondary">Unidad</label>
+                                <select id="selUnidad" class="form-select">
+                                    <option value="">-- Unidad --</option>
+                                </select>
+                            </div>
+                            @* Este es el campo que realmente se guarda en la DB *@
+                            <input type="hidden" id="inputConcentracionFinal" asp-for="Concentracion" />
+
+                            <div class="col-md-6">
+                                <label asp-for="Precio" class="form-label fw-bold text-secondary"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white"><i class="bi bi-currency-dollar text-muted"></i></span>
+                                    <input asp-for="Precio" class="form-control" placeholder="0.00" step="0.01" />
+                                </div>
+                                <span asp-validation-for="Precio" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Stock" class="form-label fw-bold text-secondary"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white"><i class="bi bi-box-seam text-muted"></i></span>
+                                    <input asp-for="Stock" class="form-control" placeholder="Cantidad" />
+                                </div>
+                                <span asp-validation-for="Stock" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="CategoriaId" class="form-label fw-bold text-secondary">Categoría</label>
+                                <select asp-for="CategoriaId" class="form-select" asp-items="ViewBag.CategoriaId">
+                                    <option value="">-- Seleccione Categoría --</option>
+                                </select>
+                                <span asp-validation-for="CategoriaId" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="EstanteId" class="form-label fw-bold text-secondary">Ubicación (Estante)</label>
+                                <select asp-for="EstanteId" class="form-select" asp-items="ViewBag.EstanteId">
+                                    <option value="">-- Seleccione Estante --</option>
+                                </select>
+                                <span asp-validation-for="EstanteId" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="FechaVencimiento" class="form-label fw-bold text-secondary"></label>
+                                <input asp-for="FechaVencimiento" class="form-control" type="date" />
+                                <span asp-validation-for="FechaVencimiento" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6 d-flex align-items-center">
+                                <div class="form-check form-switch mt-4">
+                                    <input class="form-check-input" type="checkbox" asp-for="Estado" id="switchEstado" checked>
+                                    <label class="form-check-label fw-bold text-secondary" for="switchEstado">Producto Activo</label>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <label asp-for="Descripcion" class="form-label fw-bold text-secondary"></label>
+                                <textarea asp-for="Descripcion" class="form-control" rows="2" placeholder="Notas adicionales..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2 justify-content-end mt-4 pt-3 border-top">
+                            <a asp-action="Index" class="btn btn-outline-secondary px-4">
+                                <i class="bi bi-arrow-left me-1"></i> Volver
+                            </a>
+                            <button type="submit" class="btn btn-success px-5 fw-bold shadow-sm">
+                                <i class="bi bi-check-circle me-1"></i> Guardar Medicamento
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Precio" class="control-label"></label>
-                <input asp-for="Precio" class="form-control" />
-                <span asp-validation-for="Precio" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Stock" class="control-label"></label>
-                <input asp-for="Stock" class="form-control" />
-                <span asp-validation-for="Stock" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FechaVencimiento" class="control-label"></label>
-                <input asp-for="FechaVencimiento" class="form-control" />
-                <span asp-validation-for="FechaVencimiento" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Descripcion" class="control-label"></label>
-                <input asp-for="Descripcion" class="form-control" />
-                <span asp-validation-for="Descripcion" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Estado" /> @Html.DisplayNameFor(model => model.Estado)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="CategoriaId" class="control-label"></label>
-                <select asp-for="CategoriaId" class ="form-control" asp-items="ViewBag.CategoriaId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="EstanteId" class="control-label"></label>
-                <select asp-for="EstanteId" class ="form-control" asp-items="ViewBag.EstanteId"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        const selPres = document.getElementById('selPresentacion');
+        const selUni = document.getElementById('selUnidad');
+        const numConc = document.getElementById('numConcentracion');
+        const inputFinal = document.getElementById('inputConcentracionFinal');
+
+        function cargarUnidades() {
+            const seleccion = selPres.value;
+            const unidadActual = selUni.value; // Guardar la selección actual
+
+            selUni.innerHTML = '<option value="">-- Unidad --</option>';
+
+            if (seleccion === "Capsula") {
+                agregarOpcion("mg", "Miligramos (mg)");
+                agregarOpcion("g", "Gramos (g)");
+            } else if (seleccion === "Liquido" || seleccion === "Inyectable") {
+                agregarOpcion("ml", "Mililitros (ml)");
+                agregarOpcion("mg/ml", "Conc. (mg/ml)");
+            }
+
+            // Intentar restaurar la unidad si existía
+            if(unidadActual) selUni.value = unidadActual;
+            actualizarFinal();
+        }
+
+        function agregarOpcion(val, text) {
+            let opt = document.createElement('option');
+            opt.value = val;
+            opt.text = text;
+            selUni.appendChild(opt);
+        }
+
+        function actualizarFinal() {
+            // Guardamos con un espacio para que se vea bien: "500 mg"
+            if(numConc.value && selUni.value) {
+                inputFinal.value = numConc.value + " " + selUni.value;
+            } else {
+                inputFinal.value = "";
+            }
+        }
+
+        selPres.addEventListener('change', cargarUnidades);
+        numConc.addEventListener('input', actualizarFinal);
+        selUni.addEventListener('change', actualizarFinal);
+
+        // Lógica para recarga de página (Edición o Errores de validación)
+        window.addEventListener('DOMContentLoaded', () => {
+            if (selPres.value) {
+                cargarUnidades();
+                const valorGuardado = inputFinal.value;
+                if (valorGuardado && valorGuardado.includes(" ")) {
+                    const partes = valorGuardado.split(" ");
+                    numConc.value = partes[0];
+                    selUni.value = partes[1];
+                }
+            }
+        });
+    </script>
 }

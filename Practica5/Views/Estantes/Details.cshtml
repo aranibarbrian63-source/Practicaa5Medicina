@@ -1,36 +1,84 @@
 ﻿@model Practica5.Models.Estante
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalles del Estante";
 }
 
-<h1>Details</h1>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
+                <div class="card-header bg-success text-white p-4">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <h3 class="fw-bold mb-0">
+                                <i class="bi bi-info-square-fill me-2"></i> Información del Estante
+                            </h3>
+                            <span class="badge bg-white text-success mt-2">ID Sistema: #@Model.Id</span>
+                        </div>
+                        <i class="bi bi-box-seam display-5 opacity-50"></i>
+                    </div>
+                </div>
 
-<div>
-    <h4>Estante</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Ubicacion)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Ubicacion)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Descripcion)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Descripcion)
-        </dd>
-    </dl>
+                <div class="card-body p-4 bg-white">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label class="text-muted small text-uppercase fw-bold d-block mb-1">Nombre / Identificador</label>
+                            <div class="p-3 border rounded bg-light">
+                                <i class="bi bi-tag-fill text-success me-2"></i>
+                                <span class="fw-bold fs-5 text-dark">@Html.DisplayFor(model => model.Nombre)</span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="text-muted small text-uppercase fw-bold d-block mb-1">Pasillo / Sector</label>
+                            <div class="p-3 border rounded bg-light">
+                                <i class="bi bi-geo-alt-fill text-danger me-2"></i>
+                                <span class="fw-bold fs-5 text-dark">@Html.DisplayFor(model => model.Ubicacion)</span>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="text-muted small text-uppercase fw-bold d-block mb-1">Descripción del Contenido o Niveles</label>
+                            <div class="p-3 border rounded bg-light">
+                                <i class="bi bi-layers-half text-primary me-2"></i>
+                                <span class="text-secondary">
+                                    @(string.IsNullOrEmpty(Model.Descripcion) ? "No se han registrado detalles adicionales." : Model.Descripcion)
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4 opacity-25">
+
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Index" class="btn btn-outline-secondary px-4 rounded-pill">
+                            <i class="bi bi-arrow-left"></i> Volver a la lista
+                        </a>
+                        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-success px-4 rounded-pill fw-bold shadow-sm">
+                            <i class="bi bi-pencil-square me-1"></i> Editar Ubicación
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-footer bg-light p-3 text-center border-0">
+                    <small class="text-muted italic">
+                        <i class="bi bi-shield-check me-1"></i> Los cambios en la ubicación física deben ser autorizados por el jefe de almacén.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+<style>
+    .italic {
+        font-style: italic;
+    }
+    /* Efecto sutil al pasar el mouse sobre los bloques de datos */
+    .bg-light:hover {
+        background-color: #f0fdf4 !important; /* Un verde muy clarito */
+        border-color: #198754 !important;
+        transition: 0.3s;
+    }
+</style>

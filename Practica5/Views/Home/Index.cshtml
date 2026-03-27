@@ -1,8 +1,228 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Panel de Control - Farmacia";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container-fluid py-4 px-md-5">
+    <div class="row mb-5 align-items-center">
+        <div class="col-md-8">
+            <h1 class="display-5 fw-bold text-dark mb-1">
+                <i class="bi bi-grid-1x2-fill text-primary me-2"></i> Panel de Decisiones
+            </h1>
+            <p class="lead text-muted">Gestión inteligente de inventario y control de farmacia.</p>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <div id="reloj" class="h4 fw-light text-secondary"></div>
+        </div>
+    </div>
+
+    @if (User.IsInRole("Administrador"))
+    {
+        <div class="row g-4">
+            <div class="col-xl-4 col-md-6">
+                <div class="card border-0 shadow-sm h-100 card-hover-effect" style="background: linear-gradient(45deg, #0d6efd, #0099ff); color: white;">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="text-uppercase fw-bold opacity-75 small">Total Medicamentos</h6>
+                                <h2 class="display-4 fw-bold mb-0">@ViewBag.TotalMedicamentos</h2>
+                            </div>
+                            <div class="bg-white bg-opacity-25 rounded-circle p-3 d-flex align-items-center justify-content-center" style="width: 70px; height: 70px;">
+                                <i class="bi bi-capsule-pill fs-1"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-2 border-top border-white border-opacity-25">
+                            <i class="bi bi-info-circle me-1 small"></i> <small>Catálogo completo activo</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-4 col-md-6">
+                <div class="card border-0 shadow-sm h-100 card-hover-effect" style="background: linear-gradient(45deg, #dc3545, #ff4d5e); color: white;">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="text-uppercase fw-bold opacity-75 small">Vencidos</h6>
+                                <h2 class="display-4 fw-bold mb-0">@ViewBag.Vencidos</h2>
+                            </div>
+                            <div class="bg-white bg-opacity-25 rounded-circle p-3 d-flex align-items-center justify-content-center" style="width: 70px; height: 70px;">
+                                <i class="bi bi-calendar-x fs-1"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-2 border-top border-white border-opacity-25">
+                            <i class="bi bi-exclamation-octagon me-1 small"></i> <small>Retirar de estantería urgente</small>
+                        </div>
+                    </div>
+                    <a asp-controller="Medicamentos" asp-action="ReporteVencimientos" class="card-footer bg-black bg-opacity-10 border-0 text-white text-decoration-none text-center small py-2">
+                        Ver detalles <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-xl-4 col-md-6">
+                <div class="card border-0 shadow-sm h-100 card-hover-effect" style="background: linear-gradient(45deg, #ffc107, #ffdb70); color: #443300;">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="text-uppercase fw-bold opacity-75 small">Por Vencer (30d)</h6>
+                                <h2 class="display-4 fw-bold mb-0">@ViewBag.PorVencer</h2>
+                            </div>
+                            <div class="bg-dark bg-opacity-10 rounded-circle p-3 d-flex align-items-center justify-content-center" style="width: 70px; height: 70px;">
+                                <i class="bi bi-hourglass-split fs-1"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-2 border-top border-dark border-opacity-10">
+                            <i class="bi bi-clock me-1 small"></i> <small>Próxima expiración</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-4 col-md-6">
+                <div class="card border-0 shadow-sm h-100 card-hover-effect bg-white">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="text-uppercase fw-bold text-muted small">Stock Bajo</h6>
+                                <h2 class="display-4 fw-bold mb-0 text-info">@ViewBag.BajoStock</h2>
+                            </div>
+                            <div class="bg-info bg-opacity-10 rounded-3 p-3 d-flex align-items-center justify-content-center" style="width: 70px; height: 70px;">
+                                <i class="bi bi-graph-down-arrow text-info fs-1"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-2 border-top border-light">
+                            <span class="badge bg-info bg-opacity-10 text-info">Requiere reabastecimiento</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-4 col-md-6">
+                <div class="card border-0 shadow-sm h-100 card-hover-effect bg-white">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="text-uppercase fw-bold text-muted small">Categorías</h6>
+                                <h2 class="display-4 fw-bold mb-0 text-dark">@ViewBag.TotalCategorias</h2>
+                            </div>
+                            <div class="bg-dark bg-opacity-10 rounded-3 p-3 d-flex align-items-center justify-content-center" style="width: 70px; height: 70px;">
+                                <i class="bi bi-tags text-dark fs-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-4 col-md-6">
+                <div class="card border-0 shadow-sm h-100 card-hover-effect bg-white">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="text-uppercase fw-bold text-muted small">Ubicaciones</h6>
+                                <h2 class="display-4 fw-bold mb-0 text-secondary">@ViewBag.TotalEstantes</h2>
+                            </div>
+                            <div class="bg-secondary bg-opacity-10 rounded-3 p-3 d-flex align-items-center justify-content-center" style="width: 70px; height: 70px;">
+                                <i class="bi bi-archive text-secondary fs-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mt-4">
+            <div class="col-lg-8">
+                <div class="card shadow-sm border-0 rounded-4 overflow-hidden h-100">
+                    <div class="row g-0 h-100">
+                        <div class="col-md-4 bg-primary d-flex align-items-center justify-content-center p-4">
+                            <i class="bi bi-lightning-charge text-white" style="font-size: 5rem;"></i>
+                        </div>
+                        <div class="col-md-8 p-4">
+                            <h3>Gestión Rápida</h3>
+                            <p class="text-muted">Accede directamente a las funciones más utilizadas del sistema para optimizar tu tiempo.</p>
+                            <div class="d-flex flex-wrap gap-2 mt-3">
+                                <a asp-controller="Medicamentos" asp-action="Index" class="btn btn-primary px-4 py-2">
+                                    <i class="bi bi-box me-1"></i> Inventario
+                                </a>
+                                <a asp-controller="Medicamentos" asp-action="Create" class="btn btn-outline-primary px-4 py-2">
+                                    <i class="bi bi-plus-lg me-1"></i> Registrar
+                                </a>
+                                <a asp-controller="Medicamentos" asp-action="ReporteVencimientos" class="btn btn-outline-danger px-4 py-2">
+                                    <i class="bi bi-file-earmark-pdf me-1"></i> Ver Reportes
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card shadow-sm border-0 rounded-4 h-100">
+                    <div class="card-header bg-white py-3 border-0">
+                        <h5 class="mb-0 fw-bold"><i class="bi bi-cpu text-primary me-2"></i> Estado de Red</h5>
+                    </div>
+                    <div class="card-body py-0">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                <div>
+                                    <p class="mb-0 fw-bold">Base de Datos</p>
+                                    <small class="text-muted">SQLite Local</small>
+                                </div>
+                                <span class="badge bg-success rounded-pill px-3">Estable</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                <div>
+                                    <p class="mb-0 fw-bold">Seguridad Identity</p>
+                                    <small class="text-muted">Encriptación activa</small>
+                                </div>
+                                <span class="badge bg-primary rounded-pill px-3">Activo</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-10">
+                <div class="p-5 text-center bg-white shadow-lg rounded-5 border-top border-5 border-info">
+                    <div class="display-1 text-info mb-4"><i class="bi bi-person-badge-fill"></i></div>
+                    <h1 class="fw-bold">Bienvenido al Portal de Farmacia</h1>
+                    <p class="fs-4 text-muted mb-5">Has ingresado con el perfil de <strong>@(User.IsInRole("Farmacéutico") ? "Farmacéutico" : "Cliente")</strong>.</p>
+                    <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+                        <a asp-controller="Medicamentos" asp-action="Index" class="btn btn-info btn-lg px-5 py-3 text-white fw-bold shadow">
+                            Explorar Catálogo <i class="bi bi-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 </div>
+
+<style>
+    .card-hover-effect {
+        transition: transform 0.3s ease, shadow 0.3s ease;
+    }
+
+        .card-hover-effect:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        }
+
+    body {
+        background-color: #f8f9fa;
+    }
+</style>
+
+<script>
+    function actualizarReloj() {
+        const ahora = new Date();
+        const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+        document.getElementById('reloj').innerText = ahora.toLocaleDateString('es-ES', opciones);
+    }
+    setInterval(actualizarReloj, 1000);
+    actualizarReloj();
+</script>

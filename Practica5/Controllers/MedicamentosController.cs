@@ -82,10 +82,11 @@ namespace Practica5.Controllers
             return View();
         }
 
+        // POST: Medicamentos/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrador,Farmacéutico")]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Precio,Stock,FechaVencimiento,Descripcion,Estado,CategoriaId,EstanteId")] Medicamento medicamento)
+        public async Task<IActionResult> Create([Bind("Id,Nombre,Presentacion,Concentracion,Precio,Stock,FechaVencimiento,Descripcion,Estado,CategoriaId,EstanteId")] Medicamento medicamento)
         {
             if (ModelState.IsValid)
             {
@@ -111,10 +112,11 @@ namespace Practica5.Controllers
             return View(medicamento);
         }
 
+        // POST: Medicamentos/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrador,Farmacéutico")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Precio,Stock,FechaVencimiento,Descripcion,Estado,CategoriaId,EstanteId")] Medicamento medicamento)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Presentacion,Concentracion,Precio,Stock,FechaVencimiento,Descripcion,Estado,CategoriaId,EstanteId")] Medicamento medicamento)
         {
             if (id != medicamento.Id) return NotFound();
 
