@@ -1,0 +1,104 @@
+﻿@model Practica5.Models.Medicamento
+
+@{
+    ViewData["Title"] = "Ficha del Medicamento";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div class="card shadow-lg border-0 rounded-3 overflow-hidden">
+
+                <div class="card-header bg-dark text-white p-4 border-bottom-0"
+                     style="background: linear-gradient(45deg, #1a237e, #0d47a1);">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 class="fw-bold mb-0 text-uppercase">@Html.DisplayFor(model => model.Nombre)</h2>
+                            <span class="badge bg-info text-dark mt-2">ID: #@Model.Id.ToString("D4")</span>
+                        </div>
+                        <div class="text-end">
+                            <h3 class="mb-0 fw-light text-white-50">Ficha Técnica</h3>
+                            <i class="bi bi-capsule fs-1 opacity-25"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body p-5 bg-white">
+                    <div class="row g-4">
+
+                        <div class="col-md-7 border-end pe-md-4">
+                            <h5 class="text-primary border-bottom pb-2 mb-3"><i class="bi bi-info-circle-fill me-2"></i> Información General</h5>
+
+                            <div class="mb-4">
+                                <label class="text-muted small text-uppercase d-block fw-bold">Descripción del Producto</label>
+                                <p class="fs-6 text-dark p-3 bg-light rounded border-start border-4 border-primary">
+                                    @(string.IsNullOrEmpty(Model.Descripcion) ? "No hay una descripción detallada registrada para este medicamento." : Model.Descripcion)
+                                </p>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6 mb-3">
+                                    <label class="text-muted small text-uppercase d-block fw-bold">Categoría</label>
+                                    <span class="badge bg-primary fs-6 px-3 rounded-pill">
+                                        <i class="bi bi-tag-fill me-1"></i> @Html.DisplayFor(model => model.Categoria.Nombre)
+                                    </span>
+                                </div>
+                                <div class="col-sm-6 mb-3">
+                                    <label class="text-muted small text-uppercase d-block fw-bold">Estado</label>
+                                    <span class="badge @(Model.Estado ? "bg-success" : "bg-danger") fs-6 px-3 rounded-pill">
+                                        <i class="bi @(Model.Estado ? "bi-check-circle" : "bi-x-circle") me-1"></i>
+                                        @(Model.Estado ? "Activo en Catálogo" : "Descontinuado")
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-5 ps-md-4">
+                            <h5 class="text-success border-bottom pb-2 mb-3"><i class="bi bi-box-seam-fill me-2"></i> Inventario y Ubicación</h5>
+
+                            <div class="card border-0 bg-light mb-3">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="text-muted small fw-bold text-uppercase">Precio Unitario:</span>
+                                        <span class="fw-bold text-dark fs-5">@Html.DisplayFor(model => model.Precio)</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="text-muted small fw-bold text-uppercase">Stock Disponible:</span>
+                                        <span class="badge @(Model.Stock <= 5 ? "bg-danger" : "bg-dark") px-3">
+                                            @Html.DisplayFor(model => model.Stock) unidades
+                                        </span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span class="text-muted small fw-bold text-uppercase">Ubicación:</span>
+                                        <span class="text-success fw-bold">@Html.DisplayFor(model => model.Estante.Nombre)</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="alert @(Model.FechaVencimiento < DateTime.Now ? "alert-danger" : "alert-warning") border-0 shadow-sm mt-4">
+                                <label class="text-uppercase small fw-bold d-block mb-1">Vencimiento:</label>
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-calendar-event fs-3 me-2"></i>
+                                    <strong class="fs-5">@Model.FechaVencimiento.ToString("dd 'de' MMMM, yyyy")</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-5 pt-4 border-top">
+                        <a asp-action="Index" class="btn btn-outline-secondary px-4 rounded-pill">
+                            <i class="bi bi-arrow-left me-2"></i> Regresar al Listado
+                        </a>
+                        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary px-5 rounded-pill shadow">
+                            <i class="bi bi-pencil-square me-2"></i> Editar Información
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-footer bg-light p-3 text-center border-0 text-muted">
+                    <small><i class="bi bi-shield-check me-1"></i> Datos verificados por el Sistema de Farmacia v1.0</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

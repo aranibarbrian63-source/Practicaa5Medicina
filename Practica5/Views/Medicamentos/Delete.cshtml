@@ -1,0 +1,112 @@
+﻿@model Practica5.Models.Medicamento
+
+@{
+    ViewData["Title"] = "Eliminar Medicamento";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+            <div class="card shadow-lg border-0 rounded-3 border-top border-5 border-danger">
+
+                <div class="card-header bg-white text-center p-4">
+                    <div class="display-4 text-danger mb-2">
+                        <i class="bi bi-trash3-fill"></i>
+                    </div>
+                    <h3 class="fw-bold text-dark">¿Eliminar este Medicamento?</h3>
+                    <p class="text-muted">Esta acción es permanente y el producto dejará de figurar en el inventario.</p>
+                </div>
+
+                <div class="card-body px-4 bg-light">
+                    <div class="bg-white rounded-3 p-4 shadow-sm border">
+                        <div class="row g-3">
+                            <div class="col-12 border-bottom pb-2 mb-2">
+                                <label class="text-muted small text-uppercase fw-bold">Nombre del Producto</label>
+                                <h4 class="text-primary fw-bold mb-0">@Html.DisplayFor(model => model.Nombre)</h4>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="text-muted small text-uppercase fw-bold">Categoría</label>
+                                <p class="mb-0"><i class="bi bi-tag text-info me-1"></i> @Html.DisplayFor(model => model.Categoria.Nombre)</p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="text-muted small text-uppercase fw-bold">Ubicación</label>
+                                <p class="mb-0"><i class="bi bi-door-open text-success me-1"></i> @Html.DisplayFor(model => model.Estante.Nombre)</p>
+                            </div>
+
+                            <div class="col-md-4 mt-3">
+                                <label class="text-muted small text-uppercase fw-bold">Precio</label>
+                                <p class="mb-0 fw-bold">@Html.DisplayFor(model => model.Precio)</p>
+                            </div>
+
+                            <div class="col-md-4 mt-3">
+                                <label class="text-muted small text-uppercase fw-bold">Stock Actual</label>
+                                <p class="mb-0 fw-bold @(Model.Stock <= 5 ? "text-danger" : "text-dark")">
+                                    @Html.DisplayFor(model => model.Stock) unidades
+                                </p>
+                            </div>
+
+                            <div class="col-md-4 mt-3">
+                                <label class="text-muted small text-uppercase fw-bold">Vencimiento</label>
+                                <p class="mb-0">@Model.FechaVencimiento.ToString("dd/MM/yyyy")</p>
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(Model.Descripcion))
+                            {
+                                <div class="col-12 mt-3 pt-2 border-top">
+                                    <label class="text-muted small text-uppercase fw-bold">Descripción</label>
+                                    <p class="text-muted small mb-0">@Model.Descripcion</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <form asp-action="Delete" class="mt-4">
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger btn-lg shadow-sm fw-bold rounded-pill">
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i> Confirmar Eliminación Permanente
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-secondary rounded-pill">
+                                <i class="bi bi-arrow-left me-1"></i> Cancelar y Volver a la Lista
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-footer bg-white text-center py-3 border-0">
+                    <small class="text-muted italic">
+                        <i class="bi bi-info-circle me-1"></i> Verifique que el stock sea cero antes de eliminar definitivamente.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .italic {
+        font-style: italic;
+    }
+    /* Animación sutil para el icono de basura */
+    .bi-trash3-fill {
+        display: inline-block;
+        animation: shake 2.5s infinite;
+    }
+
+    @@keyframes shake {
+        0%, 100% {
+            transform: rotate(0deg);
+        }
+
+        10%, 30%, 50%, 70%, 90% {
+            transform: rotate(-5deg);
+        }
+
+        20%, 40%, 60%, 80% {
+            transform: rotate(5deg);
+        }
+    }
+</style>

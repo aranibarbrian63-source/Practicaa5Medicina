@@ -1,0 +1,206 @@
+﻿@model Practica5.Models.Medicamento
+
+@{
+    ViewData["Title"] = "Editar Medicamento";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-lg border-0 rounded-3">
+
+                <div class="card-header bg-primary bg-gradient text-white p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-white text-primary rounded-circle p-3 me-3">
+                            <i class="bi bi-pencil-square fs-3"></i>
+                        </div>
+                        <div>
+                            <h3 class="fw-bold mb-0">Modificar Medicamento</h3>
+                            <p class="mb-0 opacity-75">Actualice la información del inventario</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger d-none"></div>
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <h5 class="text-secondary border-bottom pb-2 mb-3">Información General</h5>
+
+                                <div class="mb-3">
+                                    <label asp-for="Nombre" class="form-label fw-bold"></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light"><i class="bi bi-capsule"></i></span>
+                                        <input asp-for="Nombre" class="form-control" placeholder="Nombre del fármaco" />
+                                    </div>
+                                    <span asp-validation-for="Nombre" class="text-danger small"></span>
+                                </div>
+
+                                <div class="row g-2 mb-3">
+                                    <div class="col-sm-12">
+                                        <label class="form-label fw-bold small text-uppercase">Presentación</label>
+                                        <select id="selPresentacion" asp-for="Presentacion" class="form-select border-primary-subtle">
+                                            <option value="">-- Seleccione --</option>
+                                            <option value="Capsula">Cápsula / Tableta</option>
+                                            <option value="Liquido">Jarabe / Líquido</option>
+                                            <option value="Inyectable">Ampolla / Inyectable</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="form-label fw-bold small text-uppercase">Valor Numérico</label>
+                                        <input type="number" id="numConcentracion" class="form-control" placeholder="Ej: 500" />
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="form-label fw-bold small text-uppercase">Unidad</label>
+                                        <select id="selUnidad" class="form-select">
+                                            <option value="">-- Unidad --</option>
+                                        </select>
+                                    </div>
+                                    @* El valor final que se enviará al servidor *@
+                                    <input type="hidden" id="inputConcentracionFinal" asp-for="Concentracion" />
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="Descripcion" class="form-label fw-bold"></label>
+                                    <textarea asp-for="Descripcion" class="form-control" rows="3" placeholder="Detalles..."></textarea>
+                                    <span asp-validation-for="Descripcion" class="text-danger small"></span>
+                                </div>
+
+                                <div class="form-check form-switch mt-4 p-3 bg-light rounded border">
+                                    <input class="form-check-input ms-0 me-2" type="checkbox" asp-for="Estado">
+                                    <label class="form-check-label fw-bold" asp-for="Estado">Producto Activo</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+                                <h5 class="text-secondary border-bottom pb-2 mb-3">Inventario y Ubicación</h5>
+
+                                <div class="row">
+                                    <div class="col-sm-6 mb-3">
+                                        <label asp-for="Precio" class="form-label fw-bold"></label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">$</span>
+                                            <input asp-for="Precio" class="form-control text-end" step="0.01" />
+                                        </div>
+                                        <span asp-validation-for="Precio" class="text-danger small"></span>
+                                    </div>
+                                    <div class="col-sm-6 mb-3">
+                                        <label asp-for="Stock" class="form-label fw-bold"></label>
+                                        <input asp-for="Stock" class="form-control" />
+                                        <span asp-validation-for="Stock" class="text-danger small"></span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="FechaVencimiento" class="form-label fw-bold"></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light"><i class="bi bi-calendar-x"></i></span>
+                                        <input asp-for="FechaVencimiento" class="form-control" type="date" />
+                                    </div>
+                                    <span asp-validation-for="FechaVencimiento" class="text-danger small"></span>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-6 mb-3">
+                                        <label asp-for="CategoriaId" class="form-label fw-bold">Categoría</label>
+                                        <select asp-for="CategoriaId" class="form-select border-primary-subtle" asp-items="ViewBag.CategoriaId"></select>
+                                    </div>
+                                    <div class="col-sm-6 mb-3">
+                                        <label asp-for="EstanteId" class="form-label fw-bold">Estante</label>
+                                        <select asp-for="EstanteId" class="form-select border-primary-subtle" asp-items="ViewBag.EstanteId"></select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a asp-action="Index" class="btn btn-outline-secondary px-4 rounded-pill">
+                                <i class="bi bi-arrow-left me-1"></i> Descartar cambios
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg px-5 rounded-pill shadow">
+                                <i class="bi bi-check-lg me-1"></i> Guardar Cambios
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        const selPres = document.getElementById('selPresentacion');
+        const selUni = document.getElementById('selUnidad');
+        const numConc = document.getElementById('numConcentracion');
+        const inputFinal = document.getElementById('inputConcentracionFinal');
+
+        function cargarUnidades(unidadSeleccionada = "") {
+            const valorActual = selPres.value;
+            selUni.innerHTML = '<option value="">-- Unidad --</option>';
+
+            if (valorActual === "Capsula") {
+                agregarOpcion("mg", "mg");
+                agregarOpcion("g", "g");
+            } else if (valorActual === "Liquido" || valorActual === "Inyectable") {
+                agregarOpcion("ml", "ml");
+                agregarOpcion("mg/ml", "mg/ml");
+            }
+
+            if (unidadSeleccionada) {
+                selUni.value = unidadSeleccionada;
+            }
+        }
+
+        function agregarOpcion(val, text) {
+            let opt = document.createElement('option');
+            opt.value = val; opt.text = text;
+            selUni.appendChild(opt);
+        }
+
+        function inicializarDatos() {
+            // Recuperamos el valor que ya está en el input hidden (desde la DB)
+            const data = inputFinal.value;
+
+            if (data) {
+                // Separamos números de letras
+                const numero = data.replace(/[^0-9.]/g, '');
+                const unidad = data.replace(/[0-9.]/g, '');
+
+                // Cargamos el selector de unidades según la presentación
+                cargarUnidades(unidad);
+
+                // Asignamos el valor al input de número
+                numConc.value = numero;
+            } else {
+                cargarUnidades();
+            }
+        }
+
+        function actualizarFinal() {
+            if (numConc.value && selUni.value) {
+                inputFinal.value = numConc.value + selUni.value;
+            }
+        }
+
+        // Eventos
+        selPres.addEventListener('change', () => {
+            cargarUnidades();
+            actualizarFinal();
+        });
+        numConc.addEventListener('input', actualizarFinal);
+        selUni.addEventListener('change', actualizarFinal);
+
+        // Inicializar al cargar
+        document.addEventListener('DOMContentLoaded', inicializarDatos);
+    </script>
+}
